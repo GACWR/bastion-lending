@@ -1,0 +1,19 @@
+{
+  "name": "bastion-lending",
+  "version": "1.0.0",
+  "description": "Bastion Realms, a Hub-and-Spoke design enabling isolated pools and leveraged yield farming. Realms enable full-stack customizability of asset parameters, acts as a sandbox for experimentation with innovative oracle and interest-rate mechanisms, broaden the horizon for DAO-To-DAO partnerships with Bastion, and allows us to list the long-tail of assets.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bastionprotocol/bastion-lending.git"
+  },
+  "keywords": [],
+  "author": "bastionprotocol",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bastionprotocol/bastion-lending/issues"
+  },
+  "homepage": "https://app.bastionprotocol.com",
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.3.0"
+  }
+}
