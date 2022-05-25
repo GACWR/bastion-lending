@@ -106,7 +106,7 @@ contract Comptroller is
     );
 
     /// @notice Emitted when maxAssets is changed by admin
-    event NewMaxAssets(uint oldMaxAssets, uint newMaxAssets);
+    event NewMaxAssets(uint256 oldMaxAssets, uint256 newMaxAssets);
 
     /// @notice Emitted when COMP is granted by admin
     event CompGranted(address recipient, uint256 amount);
@@ -215,7 +215,7 @@ contract Comptroller is
             return Error.NO_ERROR;
         }
 
-        if (accountAssets[borrower].length >= maxAssets)  {
+        if (accountAssets[borrower].length >= maxAssets) {
             // no space, cannot join
             return Error.TOO_MANY_ASSETS;
         }
@@ -1080,8 +1080,11 @@ contract Comptroller is
         Exp memory ratio;
 
         numerator = mul_(
-            Exp({mantissa: liquidationIncentiveMantissa}),
-            Exp({mantissa: priceBorrowedMantissa})
+            mul_(
+                Exp({mantissa: liquidationIncentiveMantissa}),
+                Exp({mantissa: priceBorrowedMantissa})
+            ),
+            actualRepayAmount
         );
         denominator = mul_(
             Exp({mantissa: priceCollateralMantissa}),
@@ -1089,7 +1092,7 @@ contract Comptroller is
         );
         ratio = div_(numerator, denominator);
 
-        seizeTokens = mul_ScalarTruncate(ratio, actualRepayAmount);
+        seizeTokens = truncate(ratio);
 
         return (uint256(Error.NO_ERROR), seizeTokens);
     }
@@ -1240,23 +1243,27 @@ contract Comptroller is
         return uint256(Error.NO_ERROR);
     }
 
-   /**
-      * @notice Sets maxAssets which controls how many markets can be entered
-      * @dev Admin function to set maxAssets
-      * @param newMaxAssets New max assets
-      * @return uint 0=success, otherwise a failure. (See ErrorReporter for details)
-      */
-    function _setMaxAssets(uint newMaxAssets) external returns (uint) {
+    /**
+     * @notice Sets maxAssets which controls how many markets can be entered
+     * @dev Admin function to set maxAssets
+     * @param newMaxAssets New max assets
+     * @return uint 0=success, otherwise a failure. (See ErrorReporter for details)
+     */
+    function _setMaxAssets(uint256 newMaxAssets) external returns (uint256) {
         // Check caller is admin OR currently initialzing as new unitroller implementation
         if (!adminOrInitializing()) {
-            return fail(Error.UNAUTHORIZED, FailureInfo.SET_MAX_ASSETS_OWNER_CHECK);
+            return
+                fail(
+                    Error.UNAUTHORIZED,
+                    FailureInfo.SET_MAX_ASSETS_OWNER_CHECK
+                );
         }
 
-        uint oldMaxAssets = maxAssets;
+        uint256 oldMaxAssets = maxAssets;
         maxAssets = newMaxAssets;
         emit NewMaxAssets(oldMaxAssets, newMaxAssets);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
