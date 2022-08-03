@@ -729,16 +729,16 @@ contract Comptroller is
         }
 
         // Keep the flywheel moving
-        // RewardDistributor(rewardDistributor)
-        //     .updateAndDistributeSupplierRewardsForToken(
-        //         cTokenCollateral,
-        //         borrower
-        //     );
-        // RewardDistributor(rewardDistributor)
-        //     .updateAndDistributeSupplierRewardsForToken(
-        //         cTokenCollateral,
-        //         liquidator
-        //     );
+        RewardDistributor(rewardDistributor)
+            .updateAndDistributeSupplierRewardsForToken(
+                cTokenCollateral,
+                borrower
+            );
+        RewardDistributor(rewardDistributor)
+            .updateAndDistributeSupplierRewardsForToken(
+                cTokenCollateral,
+                liquidator
+            );
 
         return uint256(Error.NO_ERROR);
     }
